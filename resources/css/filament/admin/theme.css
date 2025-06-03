@@ -1,0 +1,14 @@
+@import "tailwindcss/preflight";
+@import "tailwindcss/utilities";
+
+@layer components {
+  :root {
+    --primary: 186 230 253; /* Tailwind: sky-300 */
+  }
+}
+
+.fi-avatar-initials {
+  background-color: #dcfce7 !important; /* vert clair */
+  color: #166534 !important;            /* vert foncé */
+}
+
