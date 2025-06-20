@@ -1,35 +1,52 @@
 <x-filament::widget>
     <x-filament::card>
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            @php
-            $buttons = [
-            [
-            'title' => 'Chargement',
-            'icon' => 'truck',
-            'color' => 'info', // bleu ciel
-            ],
-            [
-            'title' => 'Vente',
-            'icon' => 'fire', // symbole alternatif pour gaz
-            'color' => 'warning',
-            ],
-            [
-            'title' => 'Reporting',
-            'icon' => 'chart-bar',
-            'color' => 'success',
-            ],
-            ];
-            @endphp
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
 
-            @foreach ($buttons as $btn)
+            {{-- Bouton : Gestion des clients --}}
             <x-filament::button
-                icon="heroicon-o-{{ $btn['icon'] }}"
-                color="{{ $btn['color'] }}"
+                tag="a"
+                href="{{ route('filament.admin.resources.clients.index') }}"
+                icon="heroicon-o-users"
+                color="info"
                 size="xl"
                 class="w-full h-32 text-xl font-bold justify-center">
-                {{ $btn['title'] }}
+                Gestion des clients
             </x-filament::button>
-            @endforeach
+
+            {{-- Bouton : Gestion des centres emplisseurs --}}
+            <x-filament::button
+                tag="a"
+                href="{{ route('filament.admin.resources.centre-emplisseurs.index') }}"
+                icon="heroicon-o-building-office"
+                color="warning"
+                size="xl"
+                class="w-full h-32 text-xl font-bold justify-center">
+                Gestion des centres emplisseurs
+            </x-filament::button>
+
+            {{-- Bouton : Gestion des chargements/ventes --}}
+            <x-filament::button
+                tag="a"
+                href="{{ route('filament.admin.resources.chargements-ventes.index') }}"
+                icon="heroicon-o-truck"
+                color="primary"
+                size="xl"
+                class="w-full h-32 text-xl font-bold justify-center">
+                Gestion des chargements/ventes
+            </x-filament::button>
+
+
+            {{-- Bouton : Reporting --}}
+            <x-filament::button
+                tag="a"
+                href="{{ route('filament.admin.pages.reporting') }}"
+                icon="heroicon-o-chart-bar"
+                color="success"
+                size="xl"
+                class="w-full h-32 text-xl font-bold justify-center">
+                Reporting
+            </x-filament::button>
+
         </div>
     </x-filament::card>
 </x-filament::widget>

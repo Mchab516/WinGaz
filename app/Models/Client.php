@@ -35,13 +35,8 @@ class Client extends Model
         return $this->belongsTo(related: Utilisateur::class, foreignKey: 'updated_by');
     }
 
-    public function ventes(): HasMany
+    public function chargementsVentes(): HasMany
     {
-        return $this->hasMany(related: Ventes::class);
-    }
-
-    public function chargements(): HasMany
-    {
-        return $this->hasMany(related: Chargements::class);
+        return $this->hasMany(ChargementsVentes::class);
     }
 }

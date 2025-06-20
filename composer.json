@@ -57,7 +57,15 @@
             "@php artisan config:clear --ansi",
             "@php artisan test"
         ]
+        
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/Saade/filament-full-fr-localization"
+        }
+    ],
+    
     "extra": {
         "laravel": {
             "dont-discover": []
@@ -71,6 +79,7 @@
             "pestphp/pest-plugin": true,
             "php-http/discovery": true
         }
+    
     },
     "minimum-stability": "stable",
     "prefer-stable": true

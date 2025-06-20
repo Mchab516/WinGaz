@@ -34,13 +34,8 @@ class CentreEmplisseur extends Model
         return $this->belongsTo(Utilisateur::class, foreignKey: 'updated_by');
     }
 
-    public function ventes(): HasMany
+    public function chargementsVentes(): HasMany
     {
-        return $this->hasMany(Ventes::class);
-    }
-
-    public function chargements(): HasMany
-    {
-        return $this->hasMany(Chargements::class);
+        return $this->hasMany(ChargementsVentes::class);
     }
 }

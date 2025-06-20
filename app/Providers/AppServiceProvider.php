@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use App\Providers\Filament\AdminPanelProvider;
+
+use Illuminate\Support\ServiceProvider;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -13,7 +15,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
 
-        $this->app->register(\App\Providers\Filament\AdminPanelProvider::class);
+        $this->app->register(AdminPanelProvider::class);
     }
 
     /**

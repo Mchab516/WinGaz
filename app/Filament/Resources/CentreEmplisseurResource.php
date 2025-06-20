@@ -14,11 +14,17 @@ class CentreEmplisseurResource extends Resource
 {
     protected static ?string $model = CentreEmplisseur::class;
 
+    protected static ?string $navigationLabel = 'Gestion des centres emplisseurs';
+
+
+
+
+
     protected static ?string $navigationIcon = 'heroicon-o-building-office';
 
     //protected static ?string $navigationGroup = 'Menu Administrateur';
 
-    protected static ?int $navigationSort = 3;
+    protected static ?int $navigationSort = 2;
 
     public static function form(Form $form): Form
     {
@@ -57,17 +63,15 @@ class CentreEmplisseurResource extends Resource
             Tables\Columns\TextColumn::make('ville.nom')
                 ->label('Ville'),
 
+            Tables\Columns\TextColumn::make('createur.email')->label('Créé par')->toggleable(isToggledHiddenByDefault: true),
             Tables\Columns\TextColumn::make('created_at')->label('Créé le')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
             Tables\Columns\TextColumn::make('updated_at')->label('Modifié le')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
         ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]);
+        ;
     }
 
     public static function getRelations(): array

@@ -15,10 +15,13 @@ use Illuminate\Support\Facades\Auth;
 class ClientResource extends Resource
 {
     protected static ?string $model = Client::class;
+    protected static ?string $navigationLabel = 'Gestion des clients';
+
+
 
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
     //protected static ?string $navigationGroup = 'Menu Administrateur';
-    protected static ?int $navigationSort = 3;
+    protected static ?int $navigationSort = 1;
 
     public static function form(Form $form): Form
     {
@@ -45,6 +48,7 @@ class ClientResource extends Resource
 
             Forms\Components\Select::make('ville_id')
                 ->relationship('ville', 'nom')
+                ->searchable()
                 ->required(),
         ]);
     }
@@ -62,11 +66,10 @@ class ClientResource extends Resource
             Tables\Columns\TextColumn::make('updated_at')->label('Modifié le')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
         ])
             ->actions([
+                Tables\Actions\DeleteAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
-            ]);
+        ;
     }
 
     public static function getPages(): array

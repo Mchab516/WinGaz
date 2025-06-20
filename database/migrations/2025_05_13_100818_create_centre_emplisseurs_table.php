@@ -17,8 +17,15 @@ return new class extends Migration
             $table->string(column: 'code_sap')->unique();
             $table->string(column: 'adresse');
             $table->foreignId(column: 'ville_id')->constrained(table: 'villes');
-            $table->foreignId(column: 'created_by')->constrained(table: 'utilisateurs');
-            $table->foreignId(column: 'updated_by')->nullable()->constrained(table: 'utilisateurs');
+            $table->foreignId(column: 'created_by')
+                ->constrained(table: 'utilisateurs')
+                ->onDelete('cascade');
+
+            $table->foreignId(column: 'updated_by')
+                ->nullable()
+                ->constrained(table: 'utilisateurs')
+                ->onDelete('set null');
+
             $table->timestamps();
         });
     }

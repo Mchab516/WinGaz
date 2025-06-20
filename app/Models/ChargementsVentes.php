@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Ventes extends Model
+class ChargementsVentes extends Model
 {
-    protected $table = 'ventes';
+    protected $table = 'chargements_ventes';
 
     protected $fillable = [
         'date_collecte',
@@ -21,16 +21,17 @@ class Ventes extends Model
 
     public function client(): BelongsTo
     {
-        return $this->belongsTo(related: Client::class);
+        return $this->belongsTo(Client::class);
     }
 
     public function centreEmplisseur(): BelongsTo
     {
-        return $this->belongsTo(related: Centre_emplisseurs::class);
+        return $this->belongsTo(CentreEmplisseur::class);
     }
+
 
     public function createur(): BelongsTo
     {
-        return $this->belongsTo(related: Utilisateur::class, foreignKey: 'created_by');
+        return $this->belongsTo(utilisateur::class, 'created_by');
     }
 }

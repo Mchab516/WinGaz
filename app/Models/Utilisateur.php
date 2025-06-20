@@ -14,11 +14,11 @@ class Utilisateur extends Authenticatable
         'nom',
         'prenom',
         'email',
-        'mot_de_passe',
+        'password',
         'profil_id'
     ];
 
-    protected $hidden = ['mot_de_passe'];
+    protected $hidden = ['password'];
 
     public function profil(): BelongsTo
     {

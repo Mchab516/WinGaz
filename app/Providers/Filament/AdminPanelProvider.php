@@ -2,13 +2,10 @@
 
 namespace App\Providers\Filament;
 
-
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Pages\Dashboard;
-use Filament\Widgets\AccountWidget;
-use Filament\Widgets\FilamentInfoWidget;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -30,40 +27,38 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->brandLogo(fn() => view('components.logo'))
+
+
+            ->theme(asset('css/filament/admin/theme.css'))
+
             ->colors([
                 'primary' => Color::hex('#0094C9'),
             ])
             ->authGuard('web')
-            ->userMenuItems([])
             ->authMiddleware([
                 Authenticate::class,
             ])
-
-
-
             ->resources([
                 \App\Filament\Resources\UtilisateurResource::class,
                 \App\Filament\Resources\ProfilResource::class,
                 \App\Filament\Resources\ClientResource::class,
                 \App\Filament\Resources\CentreEmplisseurResource::class,
+                \App\Filament\Resources\ChargementsVentesResource::class,
+
+
+
+
+
             ])
-
-
-
-
             ->pages([
                 Dashboard::class,
-                \App\Filament\Admin\Pages\Chargement::class,
-                \App\Filament\Admin\Pages\Vente::class,
+
+
                 \App\Filament\Admin\Pages\Reporting::class,
             ])
-
-
             ->widgets([
                 \App\Filament\Admin\Widgets\CustomButtonsWidget::class,
             ])
-
-
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
@@ -74,6 +69,7 @@ class AdminPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+
             ]);
     }
 }

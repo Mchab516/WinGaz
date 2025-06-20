@@ -1,9 +1,10 @@
 <x-filament::dropdown placement="bottom-end" class="ms-auto">
     <x-slot name="trigger">
         <button class="focus:outline-none">
-            <div class="bg-[#0094C9] text-white rounded-full w-10 h-10 flex items-center justify-center text-sm font-bold md:w-11 md:h-11 md:text-base">
+            <div class="bg-green-600 text-white rounded-full w-10 h-10 flex items-center justify-center text-sm font-bold md:w-11 md:h-11 md:text-base">
                 {{ Str::limit(auth()->user()->name, 2, '') }}
             </div>
+
         </button>
     </x-slot>
 
