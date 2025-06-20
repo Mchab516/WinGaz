@@ -16,10 +16,6 @@ class CentreEmplisseurResource extends Resource
 
     protected static ?string $navigationLabel = 'Gestion des centres emplisseurs';
 
-
-
-
-
     protected static ?string $navigationIcon = 'heroicon-o-building-office';
 
     //protected static ?string $navigationGroup = 'Menu Administrateur';
