@@ -10,13 +10,13 @@ use App\Models\Commune;
 
 class Prefecture extends Model
 {
-    protected $fillable = ['nom', 'region_id'];
+    protected $fillable = ['nom', 'id_region'];
 
-    // 🔁 Une préfecture appartient à une région
     public function region(): BelongsTo
     {
-        return $this->belongsTo(Region::class);
+        return $this->belongsTo(Region::class, 'id_region');
     }
+
 
     // 🔁 Une préfecture a plusieurs communes
     public function communes(): HasMany

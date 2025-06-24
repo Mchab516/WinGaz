@@ -14,13 +14,12 @@ return new class extends Migration
         Schema::create('communes', function (Blueprint $table) {
             $table->id();
             $table->string('nom');
-            $table->string('code')->nullable();
-            $table->foreignId('prefecture_id')->constrained()->onDelete('cascade');
-            $table->foreignId('zone_id')->nullable()->constrained('zones')->onDelete('set null'); // 👉 ajoute cette ligne
+            $table->string('code_commune')->nullable();
+            $table->foreignId('id_prefectures')->constrained('prefectures')->onDelete('cascade');
+            $table->foreignId('zone_id')->nullable()->constrained('zones')->onDelete('set null');
             $table->timestamps();
         });
     }
-
 
     /**
      * Reverse the migrations.

@@ -67,8 +67,23 @@ class ChargementsVentesResource extends Resource
                         ->searchable()
                         ->required(),
 
-                    Forms\Components\Select::make('prefecture_id')
-                        ->relationship('prefecture', 'nom')
+                    Forms\Components\Select::make('region_id')
+                        ->label('Région')
+                        ->options(\App\Models\Region::pluck('nom', 'id'))
+                        ->reactive()
+                        ->afterStateUpdated(function (callable $set) {
+                            $set('id_prefectures', null); // Reset
+                            $set('commune_id', null);    // Reset
+                        }),
+
+                    Forms\Components\Select::make('id_prefectures')
+                        ->label('Préfecture')
+                        ->options(function (callable $get) {
+                            $regionId = $get('region_id');
+                            if (!$regionId) return [];
+
+                            return \App\Models\Prefecture::where('id_region', $regionId)->pluck('nom', 'id');
+                        })
                         ->searchable()
                         ->reactive()
                         ->required(),
@@ -76,14 +91,15 @@ class ChargementsVentesResource extends Resource
                     Forms\Components\Select::make('commune_id')
                         ->label('Commune')
                         ->options(function (callable $get) {
-                            $prefectureId = $get('prefecture_id');
+                            $prefectureId = $get('id_prefectures');
                             if (!$prefectureId) return [];
 
-                            return \App\Models\Commune::where('prefecture_id', $prefectureId)
-                                ->pluck('nom', 'id');
+                            return \App\Models\Commune::where('id_prefectures', $prefectureId)->pluck('nom', 'id');
                         })
                         ->searchable()
+                        ->reactive()
                         ->required(),
+
                 ]),
             ]),
 

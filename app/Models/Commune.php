@@ -12,8 +12,8 @@ class Commune extends Model
     protected $fillable = [
         'nom',
         'code',
-        'prefecture_id',
-        'zone_id', // assure-toi que cette colonne existe dans ta base
+        'id_prefectures',
+        'zone_id',
     ];
 
     public function prefecture(): BelongsTo
