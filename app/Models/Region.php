@@ -14,7 +14,7 @@ class Region extends Model
 
     public function villes(): HasMany
     {
-        return $this->hasMany(Villes::class);
+        return $this->hasMany(Ville::class);
     }
     public function prefectures(): HasMany
     {

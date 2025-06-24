@@ -6,11 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Villes extends Model
+class Ville extends Model
 {
-    protected $table = 'villes';
 
-    protected $fillable = ['nom', 'region_id'];
+    protected $fillable = ['nom'];
 
     public function region(): BelongsTo
     {

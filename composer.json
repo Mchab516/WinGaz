@@ -59,12 +59,7 @@
         ]
         
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/Saade/filament-full-fr-localization"
-        }
-    ],
+
     
     "extra": {
         "laravel": {

@@ -82,7 +82,7 @@ class ChargementsVentesResource extends Resource
                             $regionId = $get('region_id');
                             if (!$regionId) return [];
 
-                            return \App\Models\Prefecture::where('id_region', $regionId)->pluck('nom', 'id');
+                            return \App\Models\Prefecture::where('id_region', $regionId)->pluck('nom', 'id_prefectures');
                         })
                         ->searchable()
                         ->reactive()

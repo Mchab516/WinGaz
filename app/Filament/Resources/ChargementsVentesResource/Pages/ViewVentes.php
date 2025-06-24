@@ -4,16 +4,16 @@ namespace App\Filament\Resources\ChargementsVentesResource\Pages;
 
 use App\Filament\Resources\ChargementsVentesResource;
 use Filament\Actions;
-use Filament\Resources\Pages\EditRecord;
+use Filament\Resources\Pages\ViewRecord;
 
-class EditChargements extends EditRecord
+class ViewVentes extends ViewRecord
 {
     protected static string $resource = ChargementsVentesResource::class;
 
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            Actions\EditAction::make(),
         ];
     }
 }

@@ -47,7 +47,8 @@ class ClientResource extends Resource
                 ->maxLength(255),
 
             Forms\Components\Select::make('ville_id')
-                ->relationship('ville', 'nom')
+                ->label('Ville')
+                ->options(fn() => \App\Models\Ville::pluck('nom', 'id')->toArray())
                 ->searchable()
                 ->required(),
         ]);

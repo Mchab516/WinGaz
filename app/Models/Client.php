@@ -20,10 +20,14 @@ class Client extends Model
 
 
 
-    public function ville(): BelongsTo
+    // App\Models\Client.php
+
+    public function ville()
     {
-        return $this->belongsTo(Villes::class);
+        return $this->belongsTo(\App\Models\Ville::class, 'ville_id');
     }
+
+
 
     public function createur(): BelongsTo
     {

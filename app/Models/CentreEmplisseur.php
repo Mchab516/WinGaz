@@ -21,7 +21,7 @@ class CentreEmplisseur extends Model
 
     public function ville(): BelongsTo
     {
-        return $this->belongsTo(Villes::class);
+        return $this->belongsTo(Ville::class);
     }
 
     public function createur(): BelongsTo
