@@ -16,4 +16,14 @@ class ListClients extends ListRecords
             Actions\CreateAction::make(),
         ];
     }
+
+    public function getTitle(): string
+    {
+        return 'Gestion des clients';
+    }
+
+    public function getBreadcrumb(): string
+    {
+        return 'Gestion des clients';
+    }
 }

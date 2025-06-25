@@ -16,4 +16,14 @@ class ListUtilisateurs extends ListRecords
             Actions\CreateAction::make(),
         ];
     }
+
+    public function getTitle(): string
+    {
+        return 'Gestion des utilisateurs';
+    }
+
+    public function getBreadcrumb(): string
+    {
+        return 'Gestion des utilisateurs';
+    }
 }

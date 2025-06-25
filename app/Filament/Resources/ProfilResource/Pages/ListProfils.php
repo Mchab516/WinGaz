@@ -16,4 +16,14 @@ class ListProfils extends ListRecords
             Actions\CreateAction::make(),
         ];
     }
+
+    public function getTitle(): string
+    {
+        return 'Gestion des profils';
+    }
+
+    public function getBreadcrumb(): string
+    {
+        return 'Gestion des profils';
+    }
 }

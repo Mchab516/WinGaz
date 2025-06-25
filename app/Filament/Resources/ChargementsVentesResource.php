@@ -30,13 +30,11 @@ class ChargementsVentesResource extends Resource
                 Forms\Components\Grid::make(3)->schema([
                     Forms\Components\Select::make('annee')
                         ->label('Année')
-                        ->options([
-                            '2023' => '2023',
-                            '2024' => '2024',
-                            '2025' => '2025',
-                            '2026' => '2026',
-                            '2027' => '2027',
-                        ])
+                        ->options(
+                            collect(range(now()->year, now()->year + 4))
+                                ->mapWithKeys(fn($year) => [$year => $year])
+                                ->toArray()
+                        )
                         ->required(),
 
                     Forms\Components\Select::make('mois')
