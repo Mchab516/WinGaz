@@ -16,6 +16,7 @@ class ChargementsVentes extends Model
     protected $table = 'chargements_ventes';
 
     protected $fillable = [
+        'societe',
         'annee',
         'mois',
         'client_id',

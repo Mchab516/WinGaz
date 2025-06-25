@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create(table: 'villes', callback: function (Blueprint $table): void {
             $table->id();
             $table->string(column: 'nom');
-            $table->foreignId(column: 'region_id')->constrained(table: 'regions');
             $table->timestamps();
         });
     }

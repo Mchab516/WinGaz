@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Forms\Components\Hidden;
 use App\Filament\Resources\ChargementsVentesResource\Pages;
 use App\Filament\Resources\ChargementsVentesResource\RelationManagers;
 use App\Models\ChargementsVentes;
@@ -27,6 +28,13 @@ class ChargementsVentesResource extends Resource
     {
         return $form->schema([
             Forms\Components\Section::make('Intitulé :')->schema([
+                Forms\Components\TextInput::make('societe')
+                    ->label('Société')
+                    ->default('WINXO')
+                    ->disabled()
+                    ->dehydrated(true)
+                    ->required(),
+
                 Forms\Components\Grid::make(3)->schema([
                     Forms\Components\Select::make('annee')
                         ->label('Année')
@@ -80,7 +88,7 @@ class ChargementsVentesResource extends Resource
                             $regionId = $get('region_id');
                             if (!$regionId) return [];
 
-                            return \App\Models\Prefecture::where('id_region', $regionId)->pluck('nom', 'id_prefectures');
+                            return \App\Models\Prefecture::where('id_region', $regionId)->pluck('nom', 'id');
                         })
                         ->searchable()
                         ->reactive()
@@ -130,6 +138,11 @@ class ChargementsVentesResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('societe')
+                    ->label('Société')
+                    ->sortable()
+                    ->searchable(),
+
                 Tables\Columns\TextColumn::make('annee')->label('Année')->sortable(),
                 Tables\Columns\TextColumn::make('mois')->label('Mois')->sortable(),
                 Tables\Columns\TextColumn::make('centreEmplisseur.nom')->label('Centre emplisseur')->sortable()->searchable(),

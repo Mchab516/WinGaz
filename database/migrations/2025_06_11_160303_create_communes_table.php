@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nom');
             $table->string('code_commune')->nullable();
-            $table->foreignId('id_prefectures')->constrained('prefectures')->onDelete('cascade');
+            $table->foreignId('id_prefectures')->constrained('prefectures')->references('id');
             $table->foreignId('zone_id')->nullable()->constrained('zones')->onDelete('set null');
             $table->timestamps();
         });

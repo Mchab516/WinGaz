@@ -9,9 +9,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('prefectures', function (Blueprint $table) {
-            $table->id(); // id (AUTO_INCREMENT)
-            $table->unsignedBigInteger('id_region'); // id_region
-            $table->unsignedBigInteger('id_prefectures')->nullable(); // id_prefectures (inutile, mais ajouté comme dans la capture)
+            $table->id();
+            $table->unsignedBigInteger('id_region');
+            $table->unsignedBigInteger('id_prefectures')->nullable();
             $table->string('nom'); // nom
             $table->timestamps();
 
