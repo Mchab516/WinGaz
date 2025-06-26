@@ -25,11 +25,12 @@ class CentreEmplisseurResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
-            Forms\Components\TextInput::make('nom')
+
+            Forms\Components\TextInput::make('code_sap')
                 ->required()
                 ->maxLength(255),
 
-            Forms\Components\TextInput::make('code_sap')
+            Forms\Components\TextInput::make('nom')
                 ->required()
                 ->maxLength(255),
 
@@ -49,11 +50,12 @@ class CentreEmplisseurResource extends Resource
     public static function table(Table $table): Table
     {
         return $table->columns([
-            Tables\Columns\TextColumn::make('nom')
-                ->searchable()
-                ->sortable(),
 
             Tables\Columns\TextColumn::make('code_sap')
+                ->sortable(),
+
+            Tables\Columns\TextColumn::make('nom')
+                ->searchable()
                 ->sortable(),
 
             Tables\Columns\TextColumn::make('adresse'),

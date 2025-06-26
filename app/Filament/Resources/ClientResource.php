@@ -25,12 +25,14 @@ class ClientResource extends Resource
 
     public static function form(Form $form): Form
     {
+
         return $form->schema([
-            Forms\Components\TextInput::make('nom')
+
+            Forms\Components\TextInput::make('code_client')
                 ->required()
                 ->maxLength(255),
 
-            Forms\Components\TextInput::make('code_client')
+            Forms\Components\TextInput::make('nom')
                 ->required()
                 ->maxLength(255),
 
@@ -57,8 +59,8 @@ class ClientResource extends Resource
     public static function table(Table $table): Table
     {
         return $table->columns([
-            Tables\Columns\TextColumn::make('nom')->searchable(),
             Tables\Columns\TextColumn::make('code_client')->searchable(),
+            Tables\Columns\TextColumn::make('nom')->searchable(),
             Tables\Columns\TextColumn::make('categorie'),
             Tables\Columns\TextColumn::make('adresse'),
             Tables\Columns\TextColumn::make('ville.nom')->label('Ville'),
