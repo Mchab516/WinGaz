@@ -28,6 +28,11 @@ class AdminPanelProvider extends PanelProvider
             ->login()
             ->brandLogo(fn() => view('components.logo'))
 
+            ->renderHook(
+                'head.start',
+                fn() => '<link rel="icon" type="image/x-icon" href="' . asset('winxo-favicon.ico') . '?v=' . time() . '" />'
+            )
+
 
             ->theme(asset('css/filament/admin/theme.css'))
 
