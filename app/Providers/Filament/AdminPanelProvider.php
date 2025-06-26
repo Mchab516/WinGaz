@@ -33,7 +33,6 @@ class AdminPanelProvider extends PanelProvider
                 fn() => '<link rel="icon" type="image/x-icon" href="' . asset('winxo-favicon.ico') . '?v=' . time() . '" />'
             )
 
-
             ->theme(asset('css/filament/admin/theme.css'))
 
             ->colors([

@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Client;
-use App\Models\Villes;
+use App\Models\Ville;
 use App\Models\Utilisateur;
 use Illuminate\Support\Facades\Hash;
 
@@ -13,7 +13,7 @@ class ClientSeeder extends Seeder
     public function run(): void
     {
 
-        $ville = Villes::firstOrCreate(
+        $ville = Ville::firstOrCreate(
             ['nom' => 'Casablanca'],
             ['region_id' => 1]
         );

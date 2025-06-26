@@ -58,6 +58,7 @@ class CentreEmplisseurResource extends Resource
                 ->searchable()
                 ->sortable(),
 
+
             Tables\Columns\TextColumn::make('adresse'),
 
             Tables\Columns\TextColumn::make('ville.nom')

@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources;
 
+use Illuminate\Support\Facades\Auth;
+
 use Filament\Forms\Components\Hidden;
 use App\Filament\Resources\ChargementsVentesResource\Pages;
 use App\Filament\Resources\ChargementsVentesResource\RelationManagers;
@@ -109,27 +111,39 @@ class ChargementsVentesResource extends Resource
                 ]),
             ]),
 
-            Forms\Components\Section::make('Quantité chargé :')->schema([
+            Forms\Components\Section::make('Quantité chargée :')->schema([
                 Forms\Components\Grid::make(6)->schema([
-                    Forms\Components\TextInput::make('qte_charge_3kg')->label('3 Kg')->numeric(),
-                    Forms\Components\TextInput::make('qte_charge_6kg')->label('6 Kg')->numeric(),
-                    Forms\Components\TextInput::make('qte_charge_9kg')->label('9 Kg')->numeric(),
-                    Forms\Components\TextInput::make('qte_charge_12kg')->label('12 Kg')->numeric(),
-                    Forms\Components\TextInput::make('qte_charge_35kg')->label('35 Kg')->numeric(),
-                    Forms\Components\TextInput::make('qte_charge_40kg')->label('40 Kg')->numeric(),
+                    Forms\Components\TextInput::make('qte_charge_3kg')->label('3 Kg')->numeric()->required(),
+                    Forms\Components\TextInput::make('qte_charge_6kg')->label('6 Kg')->numeric()->required(),
+                    Forms\Components\TextInput::make('qte_charge_9kg')->label('9 Kg')->numeric()->required(),
+                    Forms\Components\TextInput::make('qte_charge_12kg')->label('12 Kg')->numeric()->required(),
+                    Forms\Components\TextInput::make('qte_charge_35kg')->label('35 Kg')->numeric()->required(),
+                    Forms\Components\TextInput::make('qte_charge_40kg')->label('40 Kg')->numeric()->required(),
                 ]),
             ]),
 
-            Forms\Components\Section::make('Quantité vendu :')->schema([
+            Forms\Components\Section::make('Quantité vendue :')->schema([
                 Forms\Components\Grid::make(6)->schema([
-                    Forms\Components\TextInput::make('qte_vendu_3kg')->label('3 Kg')->numeric(),
-                    Forms\Components\TextInput::make('qte_vendu_6kg')->label('6 Kg')->numeric(),
-                    Forms\Components\TextInput::make('qte_vendu_9kg')->label('9 Kg')->numeric(),
-                    Forms\Components\TextInput::make('qte_vendu_12kg')->label('12 Kg')->numeric(),
-                    Forms\Components\TextInput::make('qte_vendu_35kg')->label('35 Kg')->numeric(),
-                    Forms\Components\TextInput::make('qte_vendu_40kg')->label('40 Kg')->numeric(),
+                    Forms\Components\TextInput::make('qte_vendu_3kg')->label('3 Kg')->numeric()->required(),
+                    Forms\Components\TextInput::make('qte_vendu_6kg')->label('6 Kg')->numeric()->required(),
+                    Forms\Components\TextInput::make('qte_vendu_9kg')->label('9 Kg')->numeric()->required(),
+                    Forms\Components\TextInput::make('qte_vendu_12kg')->label('12 Kg')->numeric()->required(),
+                    Forms\Components\TextInput::make('qte_vendu_35kg')->label('35 Kg')->numeric()->required(),
+                    Forms\Components\TextInput::make('qte_vendu_40kg')->label('40 Kg')->numeric()->required(),
+
+                    Forms\Components\Hidden::make('created_by')
+                        ->default(fn() => Auth::id())
+                        ->dehydrated(fn($record) => $record === null),
+
+                    Forms\Components\Hidden::make('updated_by')
+                        ->default(fn() => Auth::id())
+                        ->dehydrated(true),
+
+
                 ]),
+
             ]),
+
         ]);
     }
 
@@ -169,7 +183,18 @@ class ChargementsVentesResource extends Resource
                 Tables\Columns\TextColumn::make('qte_vendu_40kg')->label('40 kg V.'),
                 Tables\Columns\TextColumn::make('createur.email')->label('Créé par')->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('created_at')->label('Créé le')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')->label('Modifié le')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('modificateur.email')
+                    ->label('Modifié par')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->formatStateUsing(fn($state, $record) => $record->created_at != $record->updated_at ? $state : null),
+
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->label('Modifié le')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->formatStateUsing(fn($state, $record) => $record->created_at != $record->updated_at ? $state : null),
+
             ])
             ->searchable()
             ->actions([
