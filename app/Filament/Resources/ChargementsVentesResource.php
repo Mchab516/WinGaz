@@ -71,8 +71,10 @@ class ChargementsVentesResource extends Resource
                         ->required(),
 
                     Forms\Components\Select::make('centre_emplisseur_id')
+                        ->label('Centre emplisseur')
                         ->relationship('centreEmplisseur', 'nom')
                         ->searchable()
+                        ->preload()
                         ->required(),
 
                     Forms\Components\Select::make('region_id')
