@@ -9,8 +9,9 @@ use App\Models\Region;
 use App\Models\Commune;
 
 class Prefecture extends Model
+
 {
-    protected $fillable = ['nom', 'id_region'];
+    protected $fillable = ['nom', 'id_region', 'id_prefectures'];
 
     public function region(): BelongsTo
     {

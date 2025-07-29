@@ -36,15 +36,15 @@
             </x-filament::button>
 
 
-            {{-- Bouton : Reporting --}}
+            {{-- Bouton : Reporting Mensuel --}}
             <x-filament::button
                 tag="a"
-                href="{{ route('filament.admin.pages.reporting') }}"
+                href="{{ route('filament.admin.resources.chargements-ventes.reporting-mensuel') }}"
                 icon="heroicon-o-chart-bar"
                 color="success"
                 size="xl"
                 class="w-full h-32 text-xl font-bold justify-center">
-                Reporting
+                Reporting Mensuel
             </x-filament::button>
 
         </div>

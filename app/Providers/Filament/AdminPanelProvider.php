@@ -58,7 +58,7 @@ class AdminPanelProvider extends PanelProvider
                 Dashboard::class,
 
 
-                \App\Filament\Admin\Pages\Reporting::class,
+                //\App\Filament\Admin\Pages\Reporting::class,
             ])
             ->widgets([
                 \App\Filament\Admin\Widgets\CustomButtonsWidget::class,
