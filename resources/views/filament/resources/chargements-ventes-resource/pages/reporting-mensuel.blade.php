@@ -1,11 +1,19 @@
 <x-filament::page>
     <x-filament::card>
 
-        {{-- En-tête --}}
-        <h2 class="text-xl font-bold mb-4">Reporting mensuel</h2>
+        {{-- Titre + Bouton Exporter --}}
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl font-bold">Reporting mensuel</h2>
+
+            <a href="{{ route('export-reporting') }}">
+                <x-filament::button color="success" size="sm" icon="heroicon-m-arrow-down-tray">
+                    Exporter (Excel)
+                </x-filament::button>
+            </a>
+        </div>
 
         {{-- Filtres --}}
-        <form method="GET" class="flex gap-4 items-center mb-6">
+        <form method="GET" class="flex gap-4 items-center mb-6 flex-wrap">
             {{-- Sélection année --}}
             <select name="annee" class="w-40 border border-gray-300 rounded-md text-sm">
                 <option value="">Année</option>
@@ -27,8 +35,7 @@
             </select>
 
             {{-- Recherche --}}
-            <input type="text" name="search" placeholder="Rechercher..."
-                value="{{ request('search') }}"
+            <input type="text" name="search" placeholder="Rechercher..." value="{{ request('search') }}"
                 class="px-4 py-2 border border-gray-300 rounded-lg text-sm w-64" />
 
             {{-- Bouton Afficher --}}
