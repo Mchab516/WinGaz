@@ -12,17 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('chargements_ventes', function (Blueprint $table) {
-            //
+            $table->unsignedBigInteger('region_id')->nullable()->after('centre_emplisseur_id');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::table('chargements_ventes', function (Blueprint $table) {
-            //
+            $table->dropColumn('region_id');
         });
     }
 };
