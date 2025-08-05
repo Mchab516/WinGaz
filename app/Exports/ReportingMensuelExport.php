@@ -43,7 +43,12 @@ class ReportingMensuelExport implements FromView
                     ->orWhere('mois', 'like', "%$search%")
                     ->orWhereHas('client', fn($sub) => $sub->where('code_client', 'like', "%$search%")
                         ->orWhere('categorie', 'like', "%$search%"))
-                    ->orWhereHas('centreEmplisseur', fn($sub) => $sub->where('nom', 'like', "%$search%"))
+                    ->orWhereHas(
+                        'centreEmplisseur',
+                        fn($sub) =>
+                        $sub->whereRaw("nom REGEXP ?", ["\\b" . preg_quote($search)])
+                    )
+
                     ->orWhereHas('region', fn($sub) => $sub->where('nom', 'like', "%$search%"))
                     ->orWhereHas('prefecture', fn($sub) => $sub->where('nom', 'like', "%$search%"))
                     ->orWhereHas('commune', fn($sub) => $sub->where('nom', 'like', "%$search%"))

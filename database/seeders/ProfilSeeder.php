@@ -9,10 +9,10 @@ class ProfilSeeder extends Seeder
 {
     public function run(): void
     {
-
         Profil::updateOrCreate(
-            ['identifiant' => 'admin'],
+            ['id' => 1],
             [
+                'identifiant' => 'admin',
                 'libelle' => 'Administrateur',
                 'code_sap' => 'ADM001',
                 'site' => 'Casablanca',

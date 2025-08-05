@@ -2,9 +2,8 @@
     <x-filament::card>
 
         {{-- Bouton Exporter aligné à droite --}}
-        <div class="text-right mb-4">
+        <div class="flex justify-end mb-4">
             <a href="{{ route('export-reporting', request()->query()) }}">
-
                 <x-filament::button color="success" size="sm" icon="heroicon-m-arrow-down-tray">
                     Exporter (Excel)
                 </x-filament::button>
@@ -12,36 +11,43 @@
         </div>
 
         {{-- Filtres --}}
-        <form method="GET" class="flex gap-4 items-center mb-6 flex-wrap" id="filters-form">
-
-            {{-- Sélection année --}}
-            <select name="annee" class="w-40 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 rounded-md text-sm text-black dark:text-white">
+        <form method="GET" class="flex flex-wrap gap-4 items-center mb-6" id="filters-form">
+            {{-- Année --}}
+            <select name="annee"
+                class="w-40 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 rounded-md text-sm text-black dark:text-white">
                 <option value="">Année</option>
                 @foreach (range(now()->year, now()->year - 3) as $year)
                 <option value="{{ $year }}" @selected(request('annee')==$year)>{{ $year }}</option>
                 @endforeach
             </select>
 
-            {{-- Sélection mois --}}
-            <select name="mois" class="w-40 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 rounded-md text-sm text-black dark:text-white">
+            {{-- Mois --}}
+            <select name="mois"
+                class="w-40 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 rounded-md text-sm text-black dark:text-white">
                 <option value="">Mois</option>
                 @foreach ([
-                '01' => 'Janvier', '02' => 'Février', '03' => 'Mars', '04' => 'Avril',
-                '05' => 'Mai', '06' => 'Juin', '07' => 'Juillet', '08' => 'Août',
-                '09' => 'Septembre', '10' => 'Octobre', '11' => 'Novembre', '12' => 'Décembre'
+                '01' => 'Janvier',
+                '02' => 'Février',
+                '03' => 'Mars',
+                '04' => 'Avril',
+                '05' => 'Mai',
+                '06' => 'Juin',
+                '07' => 'Juillet',
+                '08' => 'Août',
+                '09' => 'Septembre',
+                '10' => 'Octobre',
+                '11' => 'Novembre',
+                '12' => 'Décembre',
                 ] as $key => $month)
                 <option value="{{ $key }}" @selected(request('mois')==$key)>{{ $month }}</option>
                 @endforeach
             </select>
 
-            {{-- Recherche texte --}}
+            {{-- Recherche --}}
             <input type="text" name="search" placeholder="Rechercher..." value="{{ request('search') }}"
-                class="px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-black dark:text-white rounded-lg text-sm w-64" />
+                class="px-4 py-2 w-64 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-black dark:text-white rounded-md text-sm" />
 
-            {{-- Bouton Afficher --}}
-            <x-filament::button color="primary" size="sm" type="submit">
-                Afficher
-            </x-filament::button>
+            <x-filament::button color="primary" size="sm" type="submit">Afficher</x-filament::button>
         </form>
 
         {{-- Tableau --}}
@@ -52,7 +58,7 @@
                 $sortDirection = request('direction', 'asc');
                 @endphp
 
-                <thead class="bg-gray-800 text-white">
+                <thead>
                     <tr>
                         @foreach ([
                         'societe' => 'Société',
@@ -72,7 +78,7 @@
                         $newDirection = $isCurrentSort && $sortDirection === 'asc' ? 'desc' : 'asc';
                         $icon = $isCurrentSort ? ($sortDirection === 'asc' ? '▲' : '▼') : '⇅';
                         @endphp
-                        <th class="px-4 py-2 whitespace-nowrap">
+                        <th class="px-4 py-2 whitespace-nowrap bg-blue-600 text-black dark:text-white">
                             <a href="{{ request()->fullUrlWithQuery(['sort' => $key, 'direction' => $newDirection]) }}"
                                 class="flex items-center gap-1 hover:underline">
                                 {{ $label }} <span class="text-xs">{{ $icon }}</span>
@@ -80,25 +86,21 @@
                         </th>
                         @endforeach
 
-                        {{-- Quantités (exemple simple, sans tri) --}}
-                        <th class="px-4 py-2">3kg</th>
-                        <th class="px-4 py-2">6kg</th>
-                        <th class="px-4 py-2">9kg</th>
-                        <th class="px-4 py-2">12kg</th>
-                        <th class="px-4 py-2">35kg</th>
-                        <th class="px-4 py-2">40kg</th>
-                        <th class="px-4 py-2">3kg VR</th>
-                        <th class="px-4 py-2">6kg VR</th>
-                        <th class="px-4 py-2">9kg VR</th>
-                        <th class="px-4 py-2">12kg VR</th>
-                        <th class="px-4 py-2">35kg VR</th>
-                        <th class="px-4 py-2">40kg VR</th>
+                        {{-- Colonnes Quantité (non triables) --}}
+                        @foreach ([
+                        '3kg', '6kg', '9kg', '12kg', '35kg', '40kg',
+                        '3kg VR', '6kg VR', '9kg VR', '12kg VR', '35kg VR', '40kg VR',
+                        ] as $qty)
+                        <th class="px-4 py-2 whitespace-nowrap bg-blue-600 text-black dark:text-white text-center">
+                            {{ $qty }}
+                        </th>
+                        @endforeach
                     </tr>
                 </thead>
 
                 <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-100 dark:divide-gray-700 text-black dark:text-white">
                     @forelse ($this->records as $record)
-                    <tr class="hover:bg-gray-800 transition-colors">
+                    <tr class="focus-within:bg-blue-100 dark:focus-within:bg-gray-800 transition-colors">
                         <td class="px-4 py-2">{{ $record->societe }}</td>
                         <td class="px-4 py-2">{{ $record->annee }}</td>
                         <td class="px-4 py-2">{{ $record->mois }}</td>
@@ -110,18 +112,18 @@
                         <td class="px-4 py-2">{{ $record->prefecture?->nom }}</td>
                         <td class="px-4 py-2">{{ $record->communeDecoupage?->nom }}</td>
                         <td class="px-4 py-2">{{ $record->commune?->nom }}</td>
-                        <td class="px-4 py-2">{{ $record->qte_charge_3kg }}</td>
-                        <td class="px-4 py-2">{{ $record->qte_charge_6kg }}</td>
-                        <td class="px-4 py-2">{{ $record->qte_charge_9kg }}</td>
-                        <td class="px-4 py-2">{{ $record->qte_charge_12kg }}</td>
-                        <td class="px-4 py-2">{{ $record->qte_charge_35kg }}</td>
-                        <td class="px-4 py-2">{{ $record->qte_charge_40kg }}</td>
-                        <td class="px-4 py-2">{{ $record->qte_vendu_3kg }}</td>
-                        <td class="px-4 py-2">{{ $record->qte_vendu_6kg }}</td>
-                        <td class="px-4 py-2">{{ $record->qte_vendu_9kg }}</td>
-                        <td class="px-4 py-2">{{ $record->qte_vendu_12kg }}</td>
-                        <td class="px-4 py-2">{{ $record->qte_vendu_35kg }}</td>
-                        <td class="px-4 py-2">{{ $record->qte_vendu_40kg }}</td>
+                        <td class="px-4 py-2 text-center">{{ $record->qte_charge_3kg }}</td>
+                        <td class="px-4 py-2 text-center">{{ $record->qte_charge_6kg }}</td>
+                        <td class="px-4 py-2 text-center">{{ $record->qte_charge_9kg }}</td>
+                        <td class="px-4 py-2 text-center">{{ $record->qte_charge_12kg }}</td>
+                        <td class="px-4 py-2 text-center">{{ $record->qte_charge_35kg }}</td>
+                        <td class="px-4 py-2 text-center">{{ $record->qte_charge_40kg }}</td>
+                        <td class="px-4 py-2 text-center">{{ $record->qte_vendu_3kg }}</td>
+                        <td class="px-4 py-2 text-center">{{ $record->qte_vendu_6kg }}</td>
+                        <td class="px-4 py-2 text-center">{{ $record->qte_vendu_9kg }}</td>
+                        <td class="px-4 py-2 text-center">{{ $record->qte_vendu_12kg }}</td>
+                        <td class="px-4 py-2 text-center">{{ $record->qte_vendu_35kg }}</td>
+                        <td class="px-4 py-2 text-center">{{ $record->qte_vendu_40kg }}</td>
                     </tr>
                     @empty
                     <tr>
@@ -134,21 +136,102 @@
             </table>
         </div>
 
+        {{-- Pagination --}}
+        <div class="mt-6 flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4 text-sm text-gray-800 dark:text-gray-200">
+            <div class="flex-1">
+                Affichage de <b>{{ $this->records->firstItem() }}</b> à <b>{{ $this->records->lastItem() }}</b> sur
+                {{ $this->records->total() }}
+            </div>
+
+
+            <div class="flex flex-wrap items-center justify-end gap-3">
+                {{-- Par page --}}
+                <form method="GET" class="flex items-center gap-2">
+                    <label for="perPage">Par page :</label>
+                    <select name="perPage" id="perPage"
+                        class="appearance-none border rounded-md px-3 py-1 pr-6 bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-600 text-black dark:text-white text-sm"
+                        onchange="this.form.submit()"
+                        style="background-image: url('data:image/svg+xml;utf8,<svg fill=\'%23ffffff\' xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' width=\'14\' height=\'14\'><path d=\'M7 10l5 5 5-5z\'/></svg>');
+                               background-repeat: no-repeat;
+                               background-position: right 0.5rem center;
+                               background-size: 0.8rem;">
+                        @foreach ([10, 25, 50, 100] as $size)
+                        <option value="{{ $size }}" @selected(request('perPage', 10)==$size)>{{ $size }}</option>
+                        @endforeach
+                        @foreach (request()->except('perPage', 'page') as $key => $value)
+                        <input type="hidden" name="{{ $key }}" value="{{ $value }}">
+                        @endforeach
+                    </select>
+                </form>
+
+                {{-- Pagination links --}}
+                <div>
+                    <nav class="flex items-center space-x-1">
+                        @if ($this->records->onFirstPage())
+                        <span class="px-2 py-1 text-gray-400">&laquo;</span>
+                        @else
+                        <a href="{{ $this->records->previousPageUrl() }}"
+                            class="px-2 py-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700">&laquo;</a>
+                        @endif
+
+                        @foreach ($this->records->getUrlRange(1, $this->records->lastPage()) as $page => $url)
+                        @if ($page == $this->records->currentPage())
+                        <span class="px-3 py-1 rounded bg-primary-600 text-white">{{ $page }}</span>
+                        @else
+                        <a href="{{ $url }}"
+                            class="px-3 py-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700">{{ $page }}</a>
+                        @endif
+                        @endforeach
+
+                        @if ($this->records->hasMorePages())
+                        <a href="{{ $this->records->nextPageUrl() }}"
+                            class="px-2 py-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700">&raquo;</a>
+                        @else
+                        <span class="px-2 py-1 text-gray-400">&raquo;</span>
+                        @endif
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+        {{-- Style custom sans hover --}}
+        <style>
+            tr:focus,
+            tr:focus-visible,
+            tr:focus-within {
+                outline: none !important;
+            }
+
+            :root:not(.dark) tr:focus-within td {
+                background-color: rgba(59, 130, 246, 0.07) !important;
+                color: inherit !important;
+            }
+
+            .dark tr:focus-within td {
+                background-color: rgba(255, 255, 255, 0.06) !important;
+                color: inherit !important;
+            }
+        </style>
+
     </x-filament::card>
 </x-filament::page>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener('DOMContentLoaded', function() {
         const searchInput = document.querySelector('input[name="search"]');
         const form = document.getElementById('filters-form');
+        let typingTimer;
+        const delay = 500; // délai en ms (0.5 seconde)
 
-        let previousValue = searchInput.value;
+        searchInput.addEventListener('input', function() {
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(() => {
+                form.submit(); // soumet le formulaire automatiquement après délai
+            }, delay);
+        });
 
-        searchInput.addEventListener("input", function() {
-            if (previousValue && searchInput.value.trim() === "") {
-                form.submit(); // Champ vidé → soumettre
-            }
-            previousValue = searchInput.value;
+        searchInput.addEventListener('keydown', function() {
+            clearTimeout(typingTimer); // empêche soumission trop tôt si encore en train de taper
         });
     });
 </script>

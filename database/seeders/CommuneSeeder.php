@@ -4,11 +4,18 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class CommuneSeeder extends Seeder
 {
     public function run(): void
     {
+        // Optionnel mais conseillé : désactiver les contraintes FK pendant le delete
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('communes')->delete(); // 🟡 utiliser delete() au lieu de truncate()
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
+
         DB::table('communes')->insert([
             ['id' => 1, 'nom' => 'ABDELGHAYA SOUAHEL', 'code_commune' => '447', 'id_prefectures' => 38, 'zone_id' => 1],
             ['id' => 2, 'nom' => 'AIT KAMRA', 'code_commune' => '444', 'id_prefectures' => 38, 'zone_id' => 1],

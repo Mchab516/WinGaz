@@ -44,8 +44,11 @@ class ReportingMensuel extends Page
                     ->orWhereHas('client', fn($q) =>
                     $q->where('code_client', 'like', "%$search%")
                         ->orWhere('categorie', 'like', "%$search%"))
-                    ->orWhereHas('centreEmplisseur', fn($q) =>
-                    $q->where('nom', 'like', "%$search%"))
+                    ->orWhereHas(
+                        'centreEmplisseur',
+                        fn($q) =>
+                        $q->whereRaw("nom REGEXP ?", ["\\b" . preg_quote($search)])
+                    )
                     ->orWhereHas('region', fn($q) =>
                     $q->where('nom', 'like', "%$search%"))
                     ->orWhereHas('prefecture', fn($q) =>
@@ -134,6 +137,6 @@ class ReportingMensuel extends Page
             $query->select('chargements_ventes.*');
         }
 
-        return $query->get();
+        return $query->paginate(15);
     }
 }
