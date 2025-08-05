@@ -5,13 +5,22 @@ namespace App\Filament\Resources\ChargementsVentesResource\Pages;
 use App\Filament\Resources\ChargementsVentesResource;
 use App\Models\ChargementsVentes;
 use Filament\Resources\Pages\Page;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Auth\Access\AuthorizationException;
 
 class ReportingMensuel extends Page
 {
     protected static string $resource = ChargementsVentesResource::class;
     protected static string $view = 'filament.resources.chargements-ventes-resource.pages.reporting-mensuel';
     protected static ?string $title = 'Reporting Mensuel';
+
+    // ✅ Vérification d'accès à la page
+    public function mount(): void
+    {
+        if (! Auth::check() || ! in_array(Auth::user()->profil_id, [1, 3])) {
+            throw new AuthorizationException();
+        }
+    }
 
     public function getRecordsProperty()
     {
@@ -59,6 +68,7 @@ class ReportingMensuel extends Page
                     $q->where('nom', 'like', "%$search%"));
             });
         }
+
 
         // Filtres numériques
         $quantities = [
@@ -133,9 +143,12 @@ class ReportingMensuel extends Page
                     $query->orderBy($sort, $direction);
             }
 
+
+
             // Important : éviter doublons
             $query->select('chargements_ventes.*');
         }
+
 
         return $query->paginate(15);
     }

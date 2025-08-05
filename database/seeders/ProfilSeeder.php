@@ -19,5 +19,27 @@ class ProfilSeeder extends Seeder
                 'nature' => 'Interne',
             ]
         );
+
+        Profil::updateOrCreate(
+            ['id' => 2],
+            [
+                'identifiant' => 'service_gaz',
+                'libelle' => 'Service Gaz',
+                'code_sap' => 'SRV001',
+                'site' => 'Casablanca',
+                'nature' => 'Interne',
+            ]
+        );
+
+        Profil::updateOrCreate(
+            ['id' => 3],
+            [
+                'identifiant' => 'compta',
+                'libelle' => 'Comptabilité',
+                'code_sap' => 'CMP001',
+                'site' => 'Casablanca',
+                'nature' => 'Interne',
+            ]
+        );
     }
 }

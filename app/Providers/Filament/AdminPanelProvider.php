@@ -16,6 +16,7 @@ use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
+use Illuminate\Support\Facades\Auth;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -27,14 +28,11 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->brandLogo(fn() => view('components.logo'))
-
             ->renderHook(
                 'head.start',
                 fn() => '<link rel="icon" type="image/x-icon" href="' . asset('winxo-favicon.ico') . '?v=' . time() . '" />'
             )
-
             ->theme(asset('css/filament/admin/theme.css'))
-
             ->colors([
                 'primary' => Color::hex('#0094C9'),
             ])
@@ -42,23 +40,9 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ])
-            ->resources([
-                \App\Filament\Resources\UtilisateurResource::class,
-                \App\Filament\Resources\ProfilResource::class,
-                \App\Filament\Resources\ClientResource::class,
-                \App\Filament\Resources\CentreEmplisseurResource::class,
-                \App\Filament\Resources\ChargementsVentesResource::class,
-
-
-
-
-
-            ])
+            ->resources($this->getResources())
             ->pages([
                 Dashboard::class,
-
-
-                //\App\Filament\Admin\Pages\Reporting::class,
             ])
             ->widgets([
                 \App\Filament\Admin\Widgets\CustomButtonsWidget::class,
@@ -73,7 +57,25 @@ class AdminPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
-
             ]);
+    }
+
+    /**
+     * Retourne les ressources visibles selon le profil connecté
+     */
+    private function getResources(): array
+    {
+        $resources = [
+            \App\Filament\Resources\ClientResource::class,
+            \App\Filament\Resources\CentreEmplisseurResource::class,
+            \App\Filament\Resources\ChargementsVentesResource::class,
+        ];
+
+        if (Auth::check() && Auth::user()->profil_id === 1) {
+            $resources[] = \App\Filament\Resources\UtilisateurResource::class;
+            $resources[] = \App\Filament\Resources\ProfilResource::class;
+        }
+
+        return $resources;
     }
 }

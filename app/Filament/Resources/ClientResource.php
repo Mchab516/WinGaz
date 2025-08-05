@@ -98,4 +98,8 @@ class ClientResource extends Resource
         $data['updated_by'] = Auth::id();
         return $data;
     }
+    public static function canAccess(): bool
+    {
+        return in_array(Auth::user()->profil_id, [1, 2]);
+    }
 }

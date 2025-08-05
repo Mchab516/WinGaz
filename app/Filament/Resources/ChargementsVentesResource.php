@@ -213,4 +213,8 @@ class ChargementsVentesResource extends Resource
 
         ];
     }
+    public static function canAccess(): bool
+    {
+        return in_array(Auth::user()->profil_id, [1, 2]);
+    }
 }

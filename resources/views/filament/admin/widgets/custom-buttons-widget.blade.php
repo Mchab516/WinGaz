@@ -35,8 +35,12 @@
                 Gestion des chargements/ventes
             </x-filament::button>
 
+            {{-- ✅ Bouton : Reporting Mensuel - visible uniquement pour Admin et Comptabilité --}}
+            @php
+            $profilId = auth()->user()->profil_id;
+            @endphp
 
-            {{-- Bouton : Reporting Mensuel --}}
+            @if(in_array($profilId, [1, 3]))
             <x-filament::button
                 tag="a"
                 href="{{ route('filament.admin.resources.chargements-ventes.reporting-mensuel') }}"
@@ -46,6 +50,7 @@
                 class="w-full h-32 text-xl font-bold justify-center">
                 Reporting Mensuel
             </x-filament::button>
+            @endif
 
         </div>
     </x-filament::card>

@@ -9,6 +9,8 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Auth;
+
 
 class CentreEmplisseurResource extends Resource
 {
@@ -87,5 +89,9 @@ class CentreEmplisseurResource extends Resource
             'create' => Pages\CreateCentreEmplisseur::route('/create'),
             'edit' => Pages\EditCentreEmplisseur::route('/{record}/edit'),
         ];
+    }
+    public static function canAccess(): bool
+    {
+        return in_array(Auth::user()->profil_id, [1, 2]);
     }
 }
