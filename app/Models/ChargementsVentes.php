@@ -11,6 +11,7 @@ use App\Models\Prefecture;
 use App\Models\Commune;
 use App\Models\Region;
 use App\Models\Utilisateur;
+use App\Models\MonthLock;
 
 class ChargementsVentes extends Model
 {
@@ -142,5 +143,13 @@ class ChargementsVentes extends Model
     public function getIdPrefectureDisplayAttribute()
     {
         return $this->prefecture?->id_prefectures ?? '—';
+    }
+
+    public function isLocked(): bool
+    {
+        return MonthLock::where('societe', $this->societe ?? 'WINXO')
+            ->where('annee', $this->annee)
+            ->where('mois',  $this->mois)
+            ->exists();
     }
 }

@@ -17,6 +17,9 @@ use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Support\Facades\Auth;
+use App\Filament\Resources\ChargementsVentesResource\Pages\ReportingMensuel;
+
+
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -43,7 +46,9 @@ class AdminPanelProvider extends PanelProvider
             ->resources($this->getResources())
             ->pages([
                 Dashboard::class,
+                ReportingMensuel::class,
             ])
+
             ->widgets([
                 \App\Filament\Admin\Widgets\CustomButtonsWidget::class,
             ])

@@ -11,7 +11,7 @@
         </div>
 
         {{-- Filtres --}}
-        <form method="GET" class="flex flex-wrap gap-4 items-center mb-6" id="filters-form">
+        <form method="GET" class="flex flex-wrap gap-4 items-center mb-4" id="filters-form">
             {{-- Année --}}
             <select name="annee"
                 class="w-40 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 rounded-md text-sm text-black dark:text-white">
@@ -50,12 +50,54 @@
             <x-filament::button color="primary" size="sm" type="submit">Afficher</x-filament::button>
         </form>
 
+        {{-- === Barre Clôture / Déclôture (séparée des filtres) === --}}
+        @php
+        $peutClore = auth()->user()->hasAnyRole(['Admin','Comptabilité']);
+        $anneeSel = request('annee');
+        $moisSel = request('mois');
+        $isLocked = $anneeSel && $moisSel
+        ? \App\Models\MonthLock::where(['societe'=>'WINXO','annee'=>$anneeSel,'mois'=>$moisSel])->exists()
+        : false;
+        @endphp
+
+        @if($peutClore)
+        <div class="flex justify-end mb-4 gap-2">
+            @if($anneeSel && $moisSel)
+            @if(!$isLocked)
+            <form method="POST" action="{{ route('close-month') }}" class="inline-block">
+                @csrf
+                <input type="hidden" name="annee" value="{{ $anneeSel }}">
+                <input type="hidden" name="mois" value="{{ $moisSel }}">
+                <x-filament::button type="submit" color="danger" size="sm" icon="heroicon-m-lock-closed">
+                    Clôturer ({{ $anneeSel }}-{{ $moisSel }})
+                </x-filament::button>
+            </form>
+            @else
+            <form method="POST" action="{{ route('open-month') }}" class="inline-block">
+                @csrf
+                @method('DELETE')
+                <input type="hidden" name="annee" value="{{ $anneeSel }}">
+                <input type="hidden" name="mois" value="{{ $moisSel }}">
+                <x-filament::button type="submit" color="warning" size="sm" icon="heroicon-m-lock-open">
+                    Déclôturer ({{ $anneeSel }}-{{ $moisSel }})
+                </x-filament::button>
+            </form>
+            @endif
+            @else
+            <x-filament::button color="gray" size="sm" icon="heroicon-m-lock-closed" disabled>
+                Clôturer (sélectionnez Année & Mois)
+            </x-filament::button>
+            @endif
+        </div>
+        @endif
+        {{-- === Fin Clôture / Déclôture === --}}
+
         {{-- Tableau --}}
         <div class="overflow-auto">
             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm">
                 @php
                 $sortColumn = request('sort');
-                $sortDirection = request('direction', 'asc');
+                $sortDirection= request('direction', 'asc');
                 @endphp
 
                 <thead>
@@ -143,7 +185,6 @@
                 {{ $this->records->total() }}
             </div>
 
-
             <div class="flex flex-wrap items-center justify-end gap-3">
                 {{-- Par page --}}
                 <form method="GET" class="flex items-center gap-2">
@@ -185,7 +226,7 @@
 
                         @if ($this->records->hasMorePages())
                         <a href="{{ $this->records->nextPageUrl() }}"
-                            class="px-2 py-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700">&raquo;</a>
+                            class="px-2 py-1 rounded hover:bg-gray-2 00 dark:hover:bg-gray-700">&raquo;</a>
                         @else
                         <span class="px-2 py-1 text-gray-400">&raquo;</span>
                         @endif
@@ -221,17 +262,17 @@
         const searchInput = document.querySelector('input[name="search"]');
         const form = document.getElementById('filters-form');
         let typingTimer;
-        const delay = 500; // délai en ms (0.5 seconde)
+        const delay = 500;
 
         searchInput.addEventListener('input', function() {
             clearTimeout(typingTimer);
             typingTimer = setTimeout(() => {
-                form.submit(); // soumet le formulaire automatiquement après délai
+                form.submit();
             }, delay);
         });
 
         searchInput.addEventListener('keydown', function() {
-            clearTimeout(typingTimer); // empêche soumission trop tôt si encore en train de taper
+            clearTimeout(typingTimer);
         });
     });
 </script>

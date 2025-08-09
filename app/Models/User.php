@@ -10,7 +10,9 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, HasRoles;
+    use HasRoles;
+
+    protected $guard_name = 'web';
 
     protected $table = 'utilisateurs';
 
