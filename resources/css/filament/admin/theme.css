@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import '../../../../vendor/filament/filament/resources/css/base.css';
+
+/* Élément personnalisé pour élargir la sidebar */
+.fi-sidebar {
+    width: 350px !important;
+}
+
+.fi-sidebar-nav .fi-sidebar-item-label {
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: unset !important;
+}
+/* Forcer la couleur verte sur le badge des initiales */
+.fi-topbar-user .fi-user-avatar {
+    background-color: #4CAF50 !important; /* Vert */
+    color: white !important;
+}
+.custom-user-badge {
+    background-color: #22C55E !important; /* vert */
+    color: white !important;
+}
+
