@@ -12,6 +12,8 @@ use Illuminate\Support\Carbon;
 
 class DashboardKpis extends StatsOverviewWidget
 {
+    protected static ?string $pollingInterval = null;
+
     protected ?string $heading = 'Indicateurs clés';
 
     // 1) Lazy: le widget se charge après le reste de la page

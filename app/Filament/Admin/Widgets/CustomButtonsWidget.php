@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Redirect;
 
 class CustomButtonsWidget extends Widget
 {
+    protected static ?string $pollingInterval = null;
+
     protected static string $view = 'filament.admin.widgets.custom-buttons-widget';
 
     protected int | string | array $columnSpan = 'full';

@@ -8,6 +8,8 @@ use Filament\Widgets\ChartWidget;
 
 class VentesMensuellesChart extends ChartWidget
 {
+    protected static ?string $pollingInterval = null;
+
     protected static ?string $heading = 'Ventes mensuelles (12 derniers mois)';
     protected static ?string $maxHeight = '260px';
 

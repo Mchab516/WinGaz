@@ -8,6 +8,8 @@ use Filament\Widgets\ChartWidget;
 
 class NouveauxClientsChart extends ChartWidget
 {
+    protected static ?string $pollingInterval = null;
+
     protected static ?string $heading = 'Nouveaux clients (12 derniers mois)';
     protected static ?string $maxHeight = '260px';
 

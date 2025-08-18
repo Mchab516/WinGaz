@@ -10,6 +10,8 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Cache;
 
 // ✅ corbeille & actions
 use Filament\Tables\Filters\TrashedFilter;
@@ -38,16 +40,32 @@ class CentreEmplisseurResource extends Resource
         return PG::can('can_centres');
     }
 
+    /** ⚡ Charger toutes les relations pour éviter les N+1 queries */
+    public static function getTableQuery(): Builder
+    {
+        return parent::getTableQuery()
+            ->with(['ville', 'createur', 'deletedBy']);
+    }
+
     public static function form(Form $form): Form
     {
         return $form->schema([
-            Forms\Components\TextInput::make('code_sap')->required()->maxLength(255),
-            Forms\Components\TextInput::make('nom')->required()->maxLength(255),
-            Forms\Components\TextInput::make('adresse')->maxLength(255),
+            Forms\Components\TextInput::make('code_sap')
+                ->required()
+                ->maxLength(255),
+
+            Forms\Components\TextInput::make('nom')
+                ->required()
+                ->maxLength(255),
+
+            Forms\Components\TextInput::make('adresse')
+                ->maxLength(255),
 
             Forms\Components\Select::make('ville_id')
                 ->label('Ville')
-                ->options(fn() => \App\Models\Ville::pluck('nom', 'id')->toArray())
+                ->options(fn() => Cache::remember('ville_options', 600, function () {
+                    return \App\Models\Ville::orderBy('nom')->pluck('nom', 'id')->toArray();
+                }))
                 ->searchable()
                 ->required(),
         ]);
@@ -64,14 +82,17 @@ class CentreEmplisseurResource extends Resource
 
                 Tables\Columns\TextColumn::make('createur.email')
                     ->label('Créé par')->toggleable(isToggledHiddenByDefault: true),
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Créé le')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
+
                 Tables\Columns\TextColumn::make('updated_at')
                     ->label('Modifié le')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
 
                 // ✅ traçabilité corbeille
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->label('Supprimé le')->dateTime()->toggleable(isToggledHiddenByDefault: true),
+
                 Tables\Columns\TextColumn::make('deletedBy.email')
                     ->label('Supprimé par')->toggleable(isToggledHiddenByDefault: true),
             ])
@@ -99,7 +120,10 @@ class CentreEmplisseurResource extends Resource
                     ForceDeleteBulkAction::make()
                         ->visible(fn() => PG::can('can_admin_menu')),
                 ]),
-            ]);
+            ])
+
+            // ✅ Pagination optimisée
+            ->paginated([10, 25, 50]);
     }
 
     public static function getRelations(): array

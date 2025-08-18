@@ -12,7 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;
 
-// ✅ imports pour corbeille & actions
+// ✅ Imports pour corbeille & actions
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Actions\RestoreAction;
 use Filament\Tables\Actions\ForceDeleteAction;
@@ -22,6 +22,7 @@ use Filament\Tables\Actions\ForceDeleteBulkAction;
 class ClientResource extends Resource
 {
     protected static ?string $model = Client::class;
+
     protected static ?string $navigationLabel = 'Gestion des clients';
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
     protected static ?int $navigationSort = 1;
@@ -41,25 +42,42 @@ class ClientResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
-            Forms\Components\TextInput::make('code_client')->required()->maxLength(255),
-            Forms\Components\TextInput::make('nom')->required()->maxLength(255),
+            Forms\Components\TextInput::make('code_client')
+                ->label('Code client')
+                ->required()
+                ->maxLength(255),
+
+            Forms\Components\TextInput::make('nom')
+                ->label('Nom')
+                ->required()
+                ->maxLength(255),
 
             Forms\Components\Select::make('categorie')
                 ->label('Catégorie')
                 ->required()
                 ->options([
-                    'Direct' => 'Direct',
+                    'Direct'   => 'Direct',
                     'Indirect' => 'Indirect',
                 ])
                 ->native(false),
 
-            Forms\Components\TextInput::make('adresse')->maxLength(255),
+            Forms\Components\TextInput::make('adresse')
+                ->label('Adresse')
+                ->maxLength(255),
 
             Forms\Components\Select::make('ville_id')
                 ->label('Ville')
                 ->options(fn() => \App\Models\Ville::pluck('nom', 'id')->toArray())
                 ->searchable()
+                ->preload()
                 ->required(),
+
+            // Traçabilité automatique
+            Forms\Components\Hidden::make('created_by')
+                ->default(fn() => Auth::id()),
+
+            Forms\Components\Hidden::make('updated_by')
+                ->default(fn() => Auth::id()),
         ]);
     }
 
@@ -67,51 +85,74 @@ class ClientResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('code_client')->searchable(),
-                Tables\Columns\TextColumn::make('nom')->searchable(),
-                Tables\Columns\TextColumn::make('categorie'),
-                Tables\Columns\TextColumn::make('adresse'),
-                Tables\Columns\TextColumn::make('ville.nom')->label('Ville'),
+                Tables\Columns\TextColumn::make('code_client')
+                    ->label('Code client')
+                    ->searchable()
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('nom')
+                    ->label('Nom')
+                    ->searchable()
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('categorie')
+                    ->label('Catégorie')
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('adresse')
+                    ->label('Adresse')
+                    ->limit(50),
+
+                Tables\Columns\TextColumn::make('ville.nom')
+                    ->label('Ville')
+                    ->sortable(),
+
                 Tables\Columns\TextColumn::make('createur.email')
                     ->label('Créé par')
                     ->toggleable(isToggledHiddenByDefault: true),
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Créé le')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+
                 Tables\Columns\TextColumn::make('updated_at')
                     ->label('Modifié le')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
-                // ✅ colonnes traçabilité corbeille
+                // ✅ Colonnes traçabilité corbeille
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->label('Supprimé le')
                     ->dateTime()
                     ->toggleable(isToggledHiddenByDefault: true),
+
                 Tables\Columns\TextColumn::make('deletedBy.email')
                     ->label('Supprimé par')
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
 
-            // ✅ filtre corbeille (Sans / Avec / Uniquement supprimés)
+            // ✅ Filtre corbeille
             ->filters([
                 TrashedFilter::make(),
             ])
 
-            // ✅ actions ligne
+            // ✅ Actions ligne
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(), // soft delete automatique si SoftDeletes sur le modèle
+
+                Tables\Actions\DeleteAction::make(), // Soft delete
+
                 RestoreAction::make()
                     ->visible(fn($record) => method_exists($record, 'trashed') && $record->trashed()),
+
                 ForceDeleteAction::make()
                     ->visible(fn() => PG::can('can_admin_menu')), // Admin uniquement
             ])
 
-            // ✅ actions groupées
+            // ✅ Actions groupées
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
@@ -129,19 +170,5 @@ class ClientResource extends Resource
             'create' => Pages\CreateClient::route('/create'),
             'edit'   => Pages\EditClient::route('/{record}/edit'),
         ];
-    }
-
-    // Traçabilité create / update
-    public static function beforeCreate($data): array
-    {
-        $data['created_by'] = Auth::id();
-        $data['updated_by'] = Auth::id();
-        return $data;
-    }
-
-    public static function beforeSave($data): array
-    {
-        $data['updated_by'] = Auth::id();
-        return $data;
     }
 }

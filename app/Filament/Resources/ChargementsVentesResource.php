@@ -13,7 +13,9 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 // Corbeille & actions
 use Filament\Tables\Filters\TrashedFilter;
@@ -39,6 +41,22 @@ class ChargementsVentesResource extends Resource
     public static function canAccess(): bool
     {
         return PG::can('can_chargements_ventes');
+    }
+
+    /** ⚡ Charger toutes les relations pour éviter N+1 queries */
+    public static function getTableQuery(): Builder
+    {
+        return parent::getTableQuery()->with([
+            'client',
+            'centreEmplisseur',
+            'region',
+            'prefecture',
+            'communeDecoupage',
+            'commune',
+            'createur',
+            'modificateur',
+            'deletedBy'
+        ]);
     }
 
     public static function form(Form $form): Form
@@ -102,7 +120,12 @@ class ChargementsVentesResource extends Resource
 
                         Forms\Components\Select::make('region_id')
                             ->label('Région')
-                            ->options(Region::pluck('nom', 'id'))
+                            ->options(fn() => Cache::remember(
+                                'regions_options',
+                                600,
+                                fn() =>
+                                Region::orderBy('nom')->pluck('nom', 'id')->toArray()
+                            ))
                             ->reactive()
                             ->afterStateUpdated(function (callable $set) {
                                 $set('prefecture_id', null);
@@ -201,7 +224,6 @@ class ChargementsVentesResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->formatStateUsing(fn($state, $record) => $record->created_at != $record->updated_at ? $state : null),
-
                 Tables\Columns\TextColumn::make('deleted_at')->label('Supprimé le')->dateTime()->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('deletedBy.email')->label('Supprimé par')->toggleable(isToggledHiddenByDefault: true),
             ])
@@ -209,6 +231,7 @@ class ChargementsVentesResource extends Resource
                 TrashedFilter::make(),
             ])
             ->searchable()
+            ->paginated([10, 25, 50]) // ✅ pagination optimisée
             ->actions([
                 Tables\Actions\EditAction::make()->label('Modifier')
                     ->visible(function (ChargementsVentes $record) {
@@ -241,23 +264,11 @@ class ChargementsVentesResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make()
-                        ->visible(function () {
-                            $u = Auth::user();
-                            return (int)($u?->profil_id) === 1
-                                || strtolower($u?->profil?->identifiant ?? '') === 'compta';
-                        }),
+                        ->visible(fn() => in_array(strtolower(Auth::user()?->profil?->identifiant ?? ''), ['compta']) || Auth::user()?->profil_id === 1),
                     RestoreBulkAction::make()
-                        ->visible(function () {
-                            $u = Auth::user();
-                            return (int)($u?->profil_id) === 1
-                                || strtolower($u?->profil?->identifiant ?? '') === 'compta';
-                        }),
+                        ->visible(fn() => in_array(strtolower(Auth::user()?->profil?->identifiant ?? ''), ['compta']) || Auth::user()?->profil_id === 1),
                     ForceDeleteBulkAction::make()
-                        ->visible(function () {
-                            $u = Auth::user();
-                            return (int)($u?->profil_id) === 1
-                                || strtolower($u?->profil?->identifiant ?? '') === 'compta';
-                        }),
+                        ->visible(fn() => in_array(strtolower(Auth::user()?->profil?->identifiant ?? ''), ['compta']) || Auth::user()?->profil_id === 1),
                 ]),
             ]);
     }
